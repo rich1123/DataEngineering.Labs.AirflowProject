@@ -11,14 +11,11 @@ dag = DAG(
 )
 
 def csv_read(path):
+    all_csv = []
     for full_file in os.listdir(path):
-        if full_file.endswith('.json'):
-            # full_filename = os.path.join(path, path, full_file)
-            full_filename = os.path.join(path, full_file)
-            with open(full_filename, 'r') as fi:
-                dictionary = json.loads(fi)
-                all_dicts.append(dictionary)
-        return all_
+        if full_file.endswith('.csv')::
+                all_csv.append(fi)
+        return all_csv
 
 
 t1 = PythonOperator(
