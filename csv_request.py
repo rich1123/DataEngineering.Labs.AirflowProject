@@ -34,9 +34,9 @@ def get_data(url: str, path: str, f_name: str):
         r = requests.get(url)
         with open(f_name + '.csv', 'wb') as fi:
             fi.write(r.content)
-    file = open(file_path, "w")
-    file.write(fi)
-    file.close()
+    # file = open(file_path, "w")
+            # file.write(fi)
+            fi.close()
 # """gets csv or other file from url and downloads to a particular local path"""
 #
 # def csv_read(path: str):
