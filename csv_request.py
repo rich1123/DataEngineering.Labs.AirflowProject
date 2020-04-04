@@ -1,7 +1,7 @@
 from datetime import timedelta
 import os
 from urllib.request import urlopen
-import wget as wget
+# import wget as wget
 import requests
 import contextlib
 
@@ -21,8 +21,13 @@ dag = DAG(
 )
 
 
-def get_data(url: str, path: str):
-    wget.download(url, path)
+def get_data(url: str):
+    f_name = input("Enter file name")
+    # wget.download(url, path)
+    r = requests.get(url)
+    with open (f_name + '.csv', 'wb') as fi:
+        fi.write(r.content)
+
 # """gets csv or other file from url and downloads to a particular local path"""
 
 def csv_read(path: str):
@@ -55,9 +60,9 @@ t3 = PythonOperator(
     provide_context=True,
     dag=dag)
 
-t1 >> t2, t3
+# t1 >> t2, t3
 
 
 
 
-# get_data('http://pfref.com/tiny/Hd4jZ')
+get_data('http://pfref.com/tiny/Hd4jZ')
