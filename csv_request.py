@@ -1,11 +1,10 @@
 from datetime import timedelta
 import os
 from urllib.request import urlopen
-
+import wget as wget
 import requests
 import contextlib
 
-import wget as wget
 from requests import get
 import csv
 import pandas as pd
@@ -23,9 +22,8 @@ dag = DAG(
 
 
 def get_data(url: str, path: str):
-   """gets csv or other file from url and downloads to a particular local path"""
-   wget.download(url, path)
-
+    wget.download(url, path)
+# """gets csv or other file from url and downloads to a particular local path"""
 
 def csv_read(path: str):
     all_csv = []
@@ -38,12 +36,11 @@ def csv_read(path: str):
 def dframe():
 
 
-t1 = PythonOperator(
+    t1 = PythonOperator(
     task_id='get data',
     python_callable=get_data,
     provide_context=True,
-    dag=dag
-)
+    dag=dag)
 
 t2 = PythonOperator(
     task_id='csv_read',
