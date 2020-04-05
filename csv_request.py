@@ -1,11 +1,10 @@
 from datetime import timedelta
 import os
 from urllib.request import urlopen
-# import wget as wget
+
 import requests
 import contextlib
 
-from requests import get
 import csv
 import pandas as pd
 from airflow import DAG
@@ -21,9 +20,9 @@ dag = DAG(
 )
 
 
-# def name_data(name: str):
-#     f_name = input(name)
-#     return f_name
+def name_data(name: str):
+    f_name = input(name)
+    return f_name
 
 def get_data(url: str, path: str, f_name: str):
         # print(fi)
@@ -31,9 +30,9 @@ def get_data(url: str, path: str, f_name: str):
     file_path = os.path.join(path, f_name)
     if not os.path.isdir(path):
         os.mkdir(path)
-        r = requests.get(url)
+        r = requests.get(url, stream=True)
         with open(f_name + '.csv', 'wb') as fi:
-            fi.write(r.content)
+            fi.write(r.iter_lines())
     # file = open(file_path, "w")
             # file.write(fi)
             fi.close()
@@ -70,10 +69,13 @@ def get_data(url: str, path: str, f_name: str):
 # t1 >> t2, t3
 
 
-# name_data('test')
+name_data('test')
 
 
-get_data('http://pfref.com/tiny/Hd4jZ', '/Users/rmaiale/dev/airflow_home/test_dat', 'test')
+get_data('http://pfref.com/pi/share/k98HH', '/Users/rmaiale/dev/airflow_home/test_dat', 'test')
 
 
 # save_csv(get_data(), '/Users/rmaiale/dev/airflow_home/test_dat', 'test')
+
+
+# Provided by [url=https://www.sports-reference.com/sharing.html?utm_source=direct&utm_medium=Share&utm_campaign=ShareTool]Pro-Football-Reference.com[/url]: [url=https://www.pro-football-reference.com/play-index/tiny.fcgi?id=Hd4jZ&utm_source=direct&utm_medium=Share&utm_campaign=ShareTool#results]View Original Table[/url]
