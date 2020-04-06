@@ -19,6 +19,12 @@ dag = DAG(
     schedule_interval=timedelta(days=1),
 )
 
+def mysql():
+    conn = create_engine('mysql+pymysql://root:yourpassword@localhost:3306/football')
+    df = pd.read_csv('/Users/rmaiale/dev/airflow_home/', delimiter=',') 
+    df.to_sql(name='nyc_housing', con=conn, schema='airflow_project', if_exists='replace')
+
+
 
 def name_data(name: str):
     f_name = input(name)
