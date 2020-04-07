@@ -11,6 +11,7 @@ from airflow import DAG
 from airflow.example_dags.example_http_operator import default_args
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
+from sqlalchemy import create_engine
 
 dag = DAG(
     'csv_request',
@@ -19,29 +20,31 @@ dag = DAG(
     schedule_interval=timedelta(days=1),
 )
 
-def mysql():
-    conn = create_engine('mysql+pymysql://root:yourpassword@localhost:3306/football')
-    df = pd.read_csv('/Users/rmaiale/dev/airflow_home/', delimiter=',') 
-    df.to_sql(name='nyc_housing', con=conn, schema='airflow_project', if_exists='replace')
-
-
-
 def name_data(name: str):
     f_name = input(name)
     return f_name
 
-def get_data(url: str, path: str, f_name: str):
-        # print(fi)
-# def save_csv(fi: str, path: str, f_name: str):
-    file_path = os.path.join(path, f_name)
-    if not os.path.isdir(path):
-        os.mkdir(path)
-        r = requests.get(url, stream=True)
-        with open(f_name + '.csv', 'wb') as fi:
-            fi.write(r.iter_lines())
-    # file = open(file_path, "w")
-            # file.write(fi)
-            fi.close()
+def mysql(f_name: str):
+    conn = create_engine('mysql+pymysql://root:yourpassword@localhost:3306/football')
+    df = pd.read_csv('/Users/rmaiale/dev/DataEngineering.Labs.AirflowProject/dags/football_data/adp.csv', delimiter=',')
+    df.to_sql(name=f_name, con=conn, schema='airflow_project', if_exists='append')
+
+
+
+
+
+# def get_data(url: str, path: str, f_name: str):
+#         # print(fi)
+# # def save_csv(fi: str, path: str, f_name: str):
+#     file_path = os.path.join(path, f_name)
+#     if not os.path.isdir(path):
+#         os.mkdir(path)
+#         r = requests.get(url, stream=True)
+#         with open(f_name + '.csv', 'wb') as fi:
+#             fi.write(r.iter_lines())
+#     # file = open(file_path, "w")
+#             # file.write(fi)
+#             fi.close()
 # """gets csv or other file from url and downloads to a particular local path"""
 #
 # def csv_read(path: str):
@@ -54,17 +57,17 @@ def get_data(url: str, path: str, f_name: str):
 #moved location
 #
 #
-#     t1 = PythonOperator(
-#     task_id='get data',
-#     python_callable=get_data,
-#     provide_context=True,
-#     dag=dag)
+t1 = PythonOperator(
+    task_id='name_data',
+    python_callable=name_data,
+    provide_context=True,
+    dag=dag)
 #
-# t2 = PythonOperator(
-#     task_id='csv_read',
-#     python_callable=csv_read,
-#     provide_context=True,
-#     dag=dag)
+t2 = PythonOperator(
+    task_id='mysql',
+    python_callable=mysql,
+    provide_context=True,
+    dag=dag)
 #
 # t3 = PythonOperator(
 #     task_id='dframe',
@@ -72,7 +75,7 @@ def get_data(url: str, path: str, f_name: str):
 #     provide_context=True,
 #     dag=dag)
 
-# t1 >> t2, t3
+t1 >> t2
 
 
 name_data('test')
