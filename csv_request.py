@@ -1,5 +1,4 @@
-from datetime import timedelta
-import boto3
+from datetime import timedelta import boto3
 import re
 import pandas as pd
 # import pdfkit
